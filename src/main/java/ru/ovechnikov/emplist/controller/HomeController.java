@@ -18,6 +18,11 @@ public class HomeController {
     }
 
 
+    @GetMapping("/")
+    public String index() {
+        return "redirect:/home";
+    }
+
     @GetMapping("/home")
     public String homePage(@RequestParam(value = "name", defaultValue = "") String name,
                            @RequestParam(value = "age", defaultValue = "") String age,

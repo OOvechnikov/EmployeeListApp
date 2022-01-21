@@ -3,6 +3,7 @@ package ru.ovechnikov.emplist.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.domain.Employee;
 
 import java.sql.ResultSet;
@@ -26,12 +27,17 @@ public class ApplicationRepository {
                 "JOIN work_time wt ON e.id = wt.employee_id " +
                 "WHERE e.id = '" + id + "'";
         Employee employee = jdbcTemplate.query(query, rse -> {
-            rse.next();
+            if (!rse.next()) {
+                return null;
+            }
             Employee emp = new Employee();
             emp.setId(rse.getInt("id"));
-            String name = rse.getString("last_name") + " "
-                    + rse.getString("first_name") + " "
-                    + rse.getString("sur_name");
+            emp.setFirstName(rse.getString("first_name"));
+            emp.setLastName(rse.getString("last_name"));
+            emp.setSurName(rse.getString("sur_name"));
+            String name = emp.getFirstName() + " "
+                    + emp.getLastName() + " "
+                    + emp.getSurName();
             emp.setName(name);
             emp.setAge(rse.getInt("age"));
             emp.setAddress(rse.getString("address"));
@@ -65,10 +71,44 @@ public class ApplicationRepository {
 //        jdbcTemplate.e
     }
 
+    public void updateEmployee(Employee request) {
+        String sql =
+                "UPDATE employees SET " +
+                "first_name=\'" + request.getFirstName() + "\', " +
+                "last_name=\'" + request.getLastName() + "\', " +
+                "sur_name=\'" + request.getSurName() + "\', " +
+                "age=" + request.getAge() +  " " +
+                "WHERE id=" + request.getId() + ";" +
+                "UPDATE addresses SET " +
+                "address=\'" + request.getAddress() + "\', " +
+                "region=\'" + request.getRegion() + "\', " +
+                "district=\'" + request.getDistrict() + "\' " +
+                "WHERE employee_id=" + request.getId() + ";" +
+                "UPDATE work_time SET " +
+                "start=\'" + request.getStart() + "\', " +
+                "finish=\'" + request.getFinish() + "\' " +
+                "WHERE employee_id=" + request.getId() + ";";
+        jdbcTemplate.execute(sql);
+    }
+
     public void deleteEmployeeById(String id) {
         String sql =
                 "DELETE FROM employees e " +
                 "WHERE e.id = '" + id + "'";
         jdbcTemplate.execute(sql);
+    }
+
+    public List<String> getRegionList() {
+        String query = "SELECT DISTINCT(a.region) FROM addresses a";
+        List<String> regionList = jdbcTemplate.query(query, 
+                (ResultSet rs, int rowNum) -> rs.getString("region"));
+        return regionList;
+    }
+
+    public List<String> getDistrictList() {
+        String query = "SELECT DISTINCT(a.district) FROM addresses a";
+        List<String> districtList = jdbcTemplate.query(query,
+                (ResultSet rs, int rowNum) -> rs.getString("district"));
+        return districtList;
     }
 }
