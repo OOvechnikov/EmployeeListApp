@@ -3,7 +3,7 @@ CREATE TABLE employees
     id           SERIAL PRIMARY KEY,
     first_name VARCHAR(20) NOT NULL,
     last_name  VARCHAR(50) NOT NULL,
-    sur_name            VARCHAR(20),
+    second_name         VARCHAR(20),
     age                INT2 NOT NULL
 );
 
@@ -27,13 +27,13 @@ CREATE TABLE users
 (
     id                        SERIAL NOT NULL,
     username VARCHAR(50) NOT NULL PRIMARY KEY,
-    password             VARCHAR(100) NOT NULL,
+    password            VARCHAR(100) NOT NULL,
     enabled                   BOOLEAN NOT NULL
 );
 
 CREATE TABLE authorities
 (
-    id             SERIAL NOT NULL,
-    username  VARCHAR(50) NOT NULL,
+    id            SERIAL NOT NULL,
+    username VARCHAR(50) NOT NULL,
     authority VARCHAR(50) NOT NULL
 )

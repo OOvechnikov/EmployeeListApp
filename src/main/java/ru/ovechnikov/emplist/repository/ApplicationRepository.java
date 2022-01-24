@@ -22,7 +22,7 @@ public class ApplicationRepository {
 
     public Employee getEmployeeById(String id) {
         String query =
-                "SELECT e.id, e.first_name, e.last_name, e.sur_name, e.age, a.address, a.region, a.district, wt.start, wt.finish from employees e " +
+                "SELECT e.id, e.first_name, e.last_name, e.second_name, e.age, a.address, a.region, a.district, wt.start, wt.finish from employees e " +
                 "JOIN addresses a on e.id = a.employee_id " +
                 "JOIN work_time wt ON e.id = wt.employee_id " +
                 "WHERE e.id = '" + id + "'";
@@ -34,10 +34,10 @@ public class ApplicationRepository {
             emp.setId(rse.getInt("id"));
             emp.setFirstName(rse.getString("first_name"));
             emp.setLastName(rse.getString("last_name"));
-            emp.setSurName(rse.getString("sur_name"));
+            emp.setSecName(rse.getString("second_name"));
             String name = emp.getFirstName() + " "
                     + emp.getLastName() + " "
-                    + emp.getSurName();
+                    + emp.getSecName();
             emp.setName(name);
             emp.setAge(rse.getInt("age"));
             emp.setAddress(rse.getString("address"));
@@ -57,7 +57,7 @@ public class ApplicationRepository {
             employee.setId(rs.getInt("id"));
             String name = rs.getString("last_name") + " "
                     + rs.getString("first_name") + " "
-                    + rs.getString("sur_name");
+                    + rs.getString("second_name");
             employee.setName(name);
             employee.setAge(rs.getInt("age"));
             return employee;
@@ -71,12 +71,12 @@ public class ApplicationRepository {
 //        jdbcTemplate.e
     }
 
-    public void updateEmployee(Employee request) {
+    public void updateEmployee(UpdateRequest request) {
         String sql =
                 "UPDATE employees SET " +
                 "first_name=\'" + request.getFirstName() + "\', " +
                 "last_name=\'" + request.getLastName() + "\', " +
-                "sur_name=\'" + request.getSurName() + "\', " +
+                "second_name=\'" + request.getSecName() + "\', " +
                 "age=" + request.getAge() +  " " +
                 "WHERE id=" + request.getId() + ";" +
                 "UPDATE addresses SET " +

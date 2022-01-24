@@ -35,7 +35,7 @@ public class ApplicationService {
         return new ResultResponse(true);
     }
 
-    public ResultResponse updateEmployee(Employee request) {
+    public ResultResponse updateEmployee(UpdateRequest request) {
         applicationRepository.updateEmployee(request);
         return new ResultResponse(true);
     }

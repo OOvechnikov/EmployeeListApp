@@ -6,7 +6,7 @@ public class Employee {
     private int id;
     private String firstName;
     private String lastName;
-    private String surName;
+    private String secName;
     private String name;
     private int age;
     private String address;
@@ -40,12 +40,12 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getSurName() {
-        return surName;
+    public String getSecName() {
+        return secName;
     }
 
-    public void setSurName(String surName) {
-        this.surName = surName;
+    public void setSecName(String secName) {
+        this.secName = secName;
     }
 
     public String getName() {

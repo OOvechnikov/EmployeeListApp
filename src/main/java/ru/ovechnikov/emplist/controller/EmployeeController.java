@@ -38,8 +38,7 @@ public class EmployeeController {
 
     @PatchMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<ResultResponse> updateEmployee(@RequestBody Employee request,
-                                                         @PathVariable("id") String id) {
+    public ResponseEntity<ResultResponse> updateEmployee(@RequestBody UpdateRequest request) {
         ResultResponse response = applicationService.updateEmployee(request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
