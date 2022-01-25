@@ -1,12 +1,12 @@
 window.addEventListener('load', function() {
     const searchButton = document.getElementById('searchButton');
     searchButton.addEventListener("click", (event)=> {
-        console.log('searchButton');
         event.preventDefault();
         event.stopPropagation();
-        const searchValue = document.getElementById('searchValue').value;
-        console.log(searchValue);
-        window.location = ('/home?search=' + searchValue);
+        const nameValue = document.getElementById('nameSearch').value;
+        const regionValue = document.getElementById('regionSearch').value;
+        const districtValue = document.getElementById('districtSearch').value;
+        window.location = ('/home?name=' + nameValue + '&region=' + regionValue + '&district=' +districtValue);
     })
 }, false);
 
@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const directions = Array.from(headers).map(function(header) {
         return '';
     });
-    console.log(directions);
 
     const transform = function (index, content) {
         const type = headers[index].getAttribute('data-type');
@@ -32,9 +31,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const sortColumn = function (index) {
         const direction = directions[index] || 'asc';
-
         const multiplier = (direction === 'asc') ? 1 : -1;
-
         const newRows = Array.from(rows);
 
         newRows.sort(function (rowA, rowB) {
@@ -43,8 +40,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const a = transform(index, cellA);
             const b = transform(index, cellB);
-            console.log('a=' + a);
-            console.log('b=' + b);
 
             switch (true) {
                 case a > b: return 1 * multiplier;
@@ -69,5 +64,4 @@ document.addEventListener('DOMContentLoaded', function () {
             sortColumn(index);
         });
     });
-
 });

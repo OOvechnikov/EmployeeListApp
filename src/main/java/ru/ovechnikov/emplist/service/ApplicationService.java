@@ -20,8 +20,10 @@ public class ApplicationService {
     }
 
 
-    public List<Employee> getEmployeeList(String searchValue) {
-        return applicationRepository.getEmployeeList(searchValue);
+    public List<Employee> getEmployeeList(String name, String region, String district) {
+        if (region.equals("Region")) region = "";
+        if (district.equals("District")) district = "";
+        return applicationRepository.getEmployeeList(name, region, district);
     }
 
     public Employee getEmployeeById(String id) {
