@@ -2,7 +2,6 @@ package ru.ovechnikov.emplist.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Component;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.domain.Employee;
@@ -51,9 +50,12 @@ public class ApplicationRepository {
         return employee;
     }
 
-    public List<Employee> getEmployeeList() {
+    public List<Employee> getEmployeeList(String searchValue) {
         String query = "" +
-                "SELECT * FROM employees e " +
+                "SELECT * FROM employees " +
+                "WHERE first_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
+                    "OR last_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
+                    "OR second_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
                 "ORDER BY id";
         List<Employee> list = jdbcTemplate.query(query, (ResultSet rs, int rowNum) -> {
             Employee employee = new Employee();

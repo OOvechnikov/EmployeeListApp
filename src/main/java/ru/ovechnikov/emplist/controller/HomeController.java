@@ -24,12 +24,9 @@ public class HomeController {
     }
 
     @GetMapping("/home")
-    public String homePage(@RequestParam(value = "name", defaultValue = "") String name,
-                           @RequestParam(value = "age", defaultValue = "") String age,
-                           @RequestParam(value = "region", defaultValue = "") String region,
-                           @RequestParam(value = "district", defaultValue = "") String district,
+    public String homePage(@RequestParam(value = "search", defaultValue = "") String searchValue,
                            Model model) {
-        model.addAttribute("employeeList", applicationService.getEmployeeList(name, age, region, district));
+        model.addAttribute("employeeList", applicationService.getEmployeeList(searchValue));
         return "/home";
     }
 }

@@ -1,4 +1,4 @@
-const myForm = document.getElementById('form')
+const button = document.getElementById("saveEmp")
 
 const id = document.getElementById("id")
 const firstName = document.getElementById("firstName")
@@ -17,7 +17,7 @@ window.addEventListener('load', function() {
     console.log('needs-validation');
     Array.prototype.filter.call(forms, function(form) {
         console.log('validation');
-        myForm.addEventListener("submit", (event)=> {
+        button.addEventListener("click", (event)=> {
             console.log('listner');
             event.preventDefault();
             event.stopPropagation();

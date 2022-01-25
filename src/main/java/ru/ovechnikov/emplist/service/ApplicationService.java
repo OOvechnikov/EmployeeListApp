@@ -20,10 +20,8 @@ public class ApplicationService {
     }
 
 
-    public List<Employee> getEmployeeList(String name, String age, String region, String district) {
-        //TODO: Сделать поиск по всем полям
-        List<Employee> employeeList = applicationRepository.getEmployeeList();
-        return employeeList;
+    public List<Employee> getEmployeeList(String searchValue) {
+        return applicationRepository.getEmployeeList(searchValue);
     }
 
     public Employee getEmployeeById(String id) {
