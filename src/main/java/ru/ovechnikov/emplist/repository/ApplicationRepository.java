@@ -7,6 +7,7 @@ import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.domain.Employee;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 @Component
@@ -30,43 +31,23 @@ public class ApplicationRepository {
             if (!rse.next()) {
                 return null;
             }
-            Employee emp = new Employee();
-            emp.setId(rse.getInt("id"));
-            emp.setFirstName(rse.getString("first_name"));
-            emp.setLastName(rse.getString("last_name"));
-            emp.setSecName(rse.getString("second_name"));
-            String name = emp.getFirstName() + " "
-                    + emp.getLastName() + " "
-                    + emp.getSecName();
-            emp.setName(name);
-            emp.setAge(rse.getInt("age"));
-            emp.setAddress(rse.getString("address"));
-            emp.setRegion(rse.getString("region"));
-            emp.setDistrict(rse.getString("district"));
-            emp.setStart(rse.getTime("start"));
-            emp.setFinish(rse.getTime("finish"));
-            return emp;
+            return getEmployee(rse);
         });
         return employee;
     }
 
-    public List<Employee> getEmployeeList(String searchValue) {
+    public List<Employee> getEmployeeList(String name, String region, String district) {
         String query = "" +
-                "SELECT * FROM employees " +
-                "WHERE first_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
-                    "OR last_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
-                    "OR second_name LIKE CONCAT('%', '" + searchValue + "', '%') " +
+                "SELECT e.id, e.first_name, e.last_name, e.second_name, e.age, a.address, a.region, a.district, wt.start, wt.finish from employees e " +
+                "JOIN addresses a on e.id = a.employee_id " +
+                "JOIN work_time wt ON e.id = wt.employee_id " +
+                "WHERE (first_name ILIKE CONCAT('%', '" + name + "', '%') " +
+                    "OR last_name ILIKE CONCAT('%', '" + name + "', '%') " +
+                    "OR second_name ILIKE CONCAT('%', '" + name + "', '%')) " +
+                    "AND a.region LIKE CONCAT('%', '" + region + "', '%') " +
+                    "AND a.district LIKE CONCAT('%', '" + district + "', '%') " +
                 "ORDER BY id";
-        List<Employee> list = jdbcTemplate.query(query, (ResultSet rs, int rowNum) -> {
-            Employee employee = new Employee();
-            employee.setId(rs.getInt("id"));
-            String name = rs.getString("last_name") + " "
-                        + rs.getString("first_name") + " "
-                        + rs.getString("second_name");
-            employee.setName(name);
-            employee.setAge(rs.getInt("age"));
-            return employee;
-        });
+        List<Employee> list = jdbcTemplate.query(query, (ResultSet rse, int rowNum) -> getEmployee(rse));
         return list;
     }
 
@@ -128,5 +109,25 @@ public class ApplicationRepository {
         List<String> districtList = jdbcTemplate.query(query,
                 (ResultSet rs, int rowNum) -> rs.getString("district"));
         return districtList;
+    }
+
+
+    private Employee getEmployee(ResultSet rs) throws SQLException {
+        Employee employee = new Employee();
+        employee.setId(rs.getInt("id"));
+        employee.setFirstName(rs.getString("first_name"));
+        employee.setLastName(rs.getString("last_name"));
+        employee.setSecName(rs.getString("second_name"));
+        String name = employee.getFirstName() + " "
+                + employee.getLastName() + " "
+                + employee.getSecName();
+        employee.setName(name);
+        employee.setAge(rs.getInt("age"));
+        employee.setAddress(rs.getString("address"));
+        employee.setRegion(rs.getString("region"));
+        employee.setDistrict(rs.getString("district"));
+        employee.setStart(rs.getTime("start"));
+        employee.setFinish(rs.getTime("finish"));
+        return employee;
     }
 }
