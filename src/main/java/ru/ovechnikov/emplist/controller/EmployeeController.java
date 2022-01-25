@@ -26,14 +26,23 @@ public class EmployeeController {
     @GetMapping("/{id}")
     public String getEmployeePage(@PathVariable("id") String id,
                                   Model model) {
-        Employee employee = applicationService.getEmployeeById(id);
-        if (employee == null) {
-            return "redirect:/home";
-        }
-        model.addAttribute("emp", employee);
         model.addAttribute("regionList", applicationService.getRegionList());
         model.addAttribute("districtList", applicationService.getDistrictList());
+        Employee employee;
+        if (id.equals("new")) {
+            employee = Employee.buildNewEmployee();
+        } else {
+            employee = applicationService.getEmployeeById(id);
+        }
+        model.addAttribute("emp", employee);
         return "/employee";
+    }
+
+    @PostMapping()
+    @ResponseBody
+    public ResponseEntity<ResultResponse> createNewEmployee(@RequestBody UpdateRequest request) {
+        ResultResponse response = applicationService.createNewEmployee(request);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @PatchMapping("/{id}")

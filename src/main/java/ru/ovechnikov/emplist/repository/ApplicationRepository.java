@@ -2,6 +2,7 @@ package ru.ovechnikov.emplist.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 import org.springframework.stereotype.Component;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.domain.Employee;
@@ -51,13 +52,15 @@ public class ApplicationRepository {
     }
 
     public List<Employee> getEmployeeList() {
-        String query = "SELECT * FROM employees e";
+        String query = "" +
+                "SELECT * FROM employees e " +
+                "ORDER BY id";
         List<Employee> list = jdbcTemplate.query(query, (ResultSet rs, int rowNum) -> {
             Employee employee = new Employee();
             employee.setId(rs.getInt("id"));
             String name = rs.getString("last_name") + " "
-                    + rs.getString("first_name") + " "
-                    + rs.getString("second_name");
+                        + rs.getString("first_name") + " "
+                        + rs.getString("second_name");
             employee.setName(name);
             employee.setAge(rs.getInt("age"));
             return employee;
@@ -65,10 +68,23 @@ public class ApplicationRepository {
         return list;
     }
 
-    public void saveNewEmployee(Employee request) {
+    public void saveNewEmployee(UpdateRequest request) {
         String sql =
-                "INSERT INTO employees";
-//        jdbcTemplate.e
+                "INSERT INTO employees (first_name, last_name, second_name, age) " +
+                "VALUES ('" + request.getFirstName() + "', '" + request.getLastName() + "', '"
+                        + request.getSecName() + "', " + request.getAge() + ") RETURNING id";
+        Integer id = jdbcTemplate.query(sql, rse -> {
+            rse.next();
+            return rse.getInt("id");
+        });
+
+        sql =
+                "INSERT INTO addresses (employee_id, address, region, district) " +
+                "VALUES (" + id + ", '" + request.getAddress() + "', '"
+                        + request.getRegion() + "', '" + request.getDistrict() + "');" +
+                "INSERT INTO work_time (employee_id, start, finish) " +
+                "VALUES (" + id + ", '" + request.getStart() + "', '" + request.getFinish() + "')";
+        jdbcTemplate.execute(sql);
     }
 
     public void updateEmployee(UpdateRequest request) {

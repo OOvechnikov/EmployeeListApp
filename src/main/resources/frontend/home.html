@@ -24,32 +24,34 @@
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
-                <div class="my-4 table-responsive">
-                    <table class="table table-bordered table-sm" style="background-color: white">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">ФИО</th>
-                                <th scope="col">Возраст</th>
-                                <th scope="col"></th>
-                            </tr>
-                        </thead>
-                        <tbody th:each="emp,empStat : ${employeeList}">
-                            <tr>
-                                <th scope="row" th:text="${empStat.index + 1}">Index</th>
-                                <td>
-                                    <a th:href="@{'/employee/' + ${emp.id}}" th:text="${emp.name}">Name</a>
-                                </td>
-                                <td th:text="${emp.age}">Age</td>
-                                <td>
-                                    <button class="btn btn-danger" th:onclick="'employeeDelete(\'' + ${emp.id} + '\')'">
-                                            Удалить
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <table class="table table-striped table-bordered table-sm my-4" style="background-color: white">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th class="col-1" scope="col">#</th>
+                            <th class="col-7"scope="col">Full name</th>
+                            <th class="col-2"scope="col">Age</th>
+                            <th class="col-2"scope="col">
+                                <button class="btn btn-primary" >
+                                    <a th:href="@{/employee/new}" style="text-decoration: none; color: white">Add new employee</a>
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="emp,empStat : ${employeeList}">
+                            <th scope="row" th:text="${empStat.index + 1}">Index</th>
+                            <td>
+                                <a th:href="@{'/employee/' + ${emp.id}}" th:text="${emp.name}">Name</a>
+                            </td>
+                            <td th:text="${emp.age}">Age</td>
+                            <td>
+                                <button class="btn btn-danger" th:onclick="'deleteEmployee(\'' + ${emp.id} + '\')'">
+                                        Remove employee
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <div class="col-md-1"></div>
         </div>
@@ -60,5 +62,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="/js/main.js"></script>
+    <script src="/js/home.js"></script>
 </body>
 </html>

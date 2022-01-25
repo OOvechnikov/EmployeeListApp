@@ -30,7 +30,7 @@ public class ApplicationService {
         return applicationRepository.getEmployeeById(id);
     }
 
-    public ResultResponse addEmployee(Employee request) {
+    public ResultResponse createNewEmployee(UpdateRequest request) {
         applicationRepository.saveNewEmployee(request);
         return new ResultResponse(true);
     }
@@ -46,12 +46,10 @@ public class ApplicationService {
     }
 
     public List<String> getRegionList() {
-        List<String> regionList = applicationRepository.getRegionList();
-        return regionList;
+        return applicationRepository.getRegionList();
     }
 
     public List<String> getDistrictList() {
-        List<String> districtList = applicationRepository.getDistrictList();
-        return districtList;
+            return applicationRepository.getDistrictList();
     }
 }

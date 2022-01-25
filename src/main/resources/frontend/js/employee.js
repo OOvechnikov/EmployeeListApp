@@ -1,4 +1,4 @@
-const button = document.getElementById("saveEmp")
+const myForm = document.getElementById('form')
 
 const id = document.getElementById("id")
 const firstName = document.getElementById("firstName")
@@ -17,12 +17,12 @@ window.addEventListener('load', function() {
     console.log('needs-validation');
     Array.prototype.filter.call(forms, function(form) {
         console.log('validation');
-        button.addEventListener("click", (event)=> {
+        myForm.addEventListener("submit", (event)=> {
             console.log('listner');
+            event.preventDefault();
+            event.stopPropagation();
             if (form.checkValidity() === false) {
                 console.log('if');
-                event.preventDefault();
-                event.stopPropagation();
             } else {
                 console.log('else');
                 const data = {
@@ -38,7 +38,13 @@ window.addEventListener('load', function() {
                     district: district.value
                 }
                 console.log(data)
-                updateEmployee(data)
+                if (data.id === '0') {
+                    console.log('create');
+                    createEmployee(data);
+                } else {
+                    console.log('update');
+                    updateEmployee(data);
+                }
             }
             form.classList.add('was-validated');
         })
