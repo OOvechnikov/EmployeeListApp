@@ -3,6 +3,7 @@ package ru.ovechnikov.emplist.domain;
 import java.sql.Time;
 
 public class Employee {
+
     private int id;
     private String firstName;
     private String lastName;
@@ -102,5 +103,12 @@ public class Employee {
 
     public void setFinish(Time finish) {
         this.finish = finish;
+    }
+
+    public static Employee buildNewEmployee() {
+        Employee employee = new Employee();
+        employee.setStart(Time.valueOf("09:00:00"));
+        employee.setFinish(Time.valueOf("18:00:00"));
+        return employee;
     }
 }
