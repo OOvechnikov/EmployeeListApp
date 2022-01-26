@@ -30,7 +30,7 @@
             </div>
             <button class="btn btn-primary btn-outline-white btn-md my-2 ml-3" id="searchButton">Search</button>
             <button class="btn btn-primary btn-outline-white btn-md my-2 ml-3" >
-                <a th:href="@{/employee/new}" style="text-decoration: none; color: white">Add new employee</a>
+                <a th:href="@{/employee/-1}" style="text-decoration: none; color: white">Add new employee</a>
             </button>
             <button class="btn btn-secondary btn-outline-white btn-md my-2 ml-3">
                 <a th:href="@{/logout}" style="text-decoration: none; color: white">Logout</a>
@@ -58,12 +58,12 @@
                         <tr th:each="emp,empStat : ${employeeList}">
                             <td th:text="${empStat.index + 1}" class="sortingValue">Index</td>
                             <td>
-                                <a th:href="@{'/employee/' + ${emp.id}}" th:text="${emp.name}" class="sortingValue">Name</a>
+                                <a th:href="@{'/employee/' + ${emp.id}}" th:text="${emp.getFullName()}" class="sortingValue">Name</a>
                             </td>
                             <td th:text="${emp.age}" class="sortingValue">Age</td>
-                            <td th:text="${emp.address}" class="sortingValue">Age</td>
-                            <td th:text="${emp.region}" class="sortingValue">Region</td>
-                            <td th:text="${emp.district}" class="sortingValue">District</td>
+                            <td th:text="${emp.address.address}" class="sortingValue">Age</td>
+                            <td th:text="${emp.address.region}" class="sortingValue">Region</td>
+                            <td th:text="${emp.address.district}" class="sortingValue">District</td>
                             <td>
                                 <button class="btn btn-danger" th:onclick="'deleteEmployee(\'' + ${emp.id} + '\')'">Remove</button>
                             </td>

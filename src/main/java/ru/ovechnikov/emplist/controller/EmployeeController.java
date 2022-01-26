@@ -8,8 +8,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.api.response.ResultResponse;
-import ru.ovechnikov.emplist.domain.Employee;
+import ru.ovechnikov.emplist.model.Employee;
+import ru.ovechnikov.emplist.model.WorkTime;
 import ru.ovechnikov.emplist.service.ApplicationService;
+
+import java.sql.Time;
 
 @Controller
 @RequestMapping("/employee")
@@ -24,13 +27,13 @@ public class EmployeeController {
 
 
     @GetMapping("/{id}")
-    public String getEmployeePage(@PathVariable("id") String id,
+    public String getEmployeePage(@PathVariable("id") Integer id,
                                   Model model) {
         model.addAttribute("regionList", applicationService.getRegionList());
         model.addAttribute("districtList", applicationService.getDistrictList());
-        Employee employee;
-        if (id.equals("new")) {
-            employee = Employee.buildNewEmployee();
+        ru.ovechnikov.emplist.model.Employee employee;
+        if (id == -1) {
+            employee = Employee.buildEmpty();
         } else {
             employee = applicationService.getEmployeeById(id);
         }
@@ -54,7 +57,7 @@ public class EmployeeController {
 
     @DeleteMapping("/{id}")
     @ResponseBody
-    public ResponseEntity<ResultResponse> deleteEmployee(@PathVariable("id") String id) {
+    public ResponseEntity<ResultResponse> deleteEmployee(@PathVariable("id") Integer id) {
         ResultResponse response = applicationService.deleteEmployee(id);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

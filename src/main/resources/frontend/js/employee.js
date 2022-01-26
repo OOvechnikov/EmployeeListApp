@@ -3,7 +3,7 @@ const button = document.getElementById("saveEmp")
 const id = document.getElementById("id")
 const firstName = document.getElementById("firstName")
 const lastName = document.getElementById("lastName")
-const secName = document.getElementById("secName")
+const secondName = document.getElementById("secondName")
 const address = document.getElementById("address")
 const age = document.getElementById("age")
 const start = document.getElementById("start")
@@ -29,7 +29,7 @@ window.addEventListener('load', function() {
                     id: id.getAttribute("value"),
                     firstName: firstName.value,
                     lastName: lastName.value,
-                    secName: secName.value,
+                    secondName: secondName.value,
                     address: address.value,
                     age: age.value,
                     start: start.value,
@@ -38,7 +38,7 @@ window.addEventListener('load', function() {
                     district: district.value
                 }
                 console.log(data)
-                if (data.id === '0') {
+                if (data.id === '') {
                     console.log('create');
                     createEmployee(data);
                 } else {

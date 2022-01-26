@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ovechnikov.emplist.mapper.EmployeeMapper">
+    <resultMap id="employeeResultMap" type="ru.ovechnikov.emplist.model.Employee">
+        <id property="id" column="e_id"/>
+        <result property="firstName" column="first_name"/>
+        <result property="lastName" column="last_name"/>
+        <result property="secondName" column="second_name"/>
+        <result property="age" column="age"/>
+        <association property="address" javaType="ru.ovechnikov.emplist.model.Address">
+           <id property="id" column="a_id"/>
+            <result property="address" column="address"/>
+            <result property="region" column="region"/>
+            <result property="district" column="district"/>
+        </association>
+        <association property="workTime" javaType="ru.ovechnikov.emplist.model.WorkTime">
+            <id property="id" column="wt_id"/>
+            <result property="start" column="start"/>
+            <result property="finish" column="finish"/>
+        </association>
+    </resultMap>
+
+    <select id="getEmployeeById" resultType="ru.ovechnikov.emplist.model.Employee" resultMap="employeeResultMap">
+        SELECT
+               e.id AS e_id,
+               e.first_name,
+               e.last_name,
+               e.second_name,
+               e.age,
+               a.id AS a_id,
+               a.address,
+               a.region,
+               a.district,
+               wt.id AS wt_id,
+               wt.start,
+               wt.finish
+        FROM employees e
+            JOIN addresses a on e.id = a.employee_id
+            JOIN work_time wt ON e.id = wt.employee_id
+        WHERE e.id = #{id};
+    </select>
+
+    <select id="getEmployeeList" resultType="ru.ovechnikov.emplist.model.Employee" resultMap="employeeResultMap">
+        SELECT
+            e.id AS e_id,
+            e.first_name,
+            e.last_name,
+            e.second_name,
+            e.age,
+            a.id AS a_id,
+            a.address,
+            a.region,
+            a.district,
+            wt.id AS wt_id,
+            wt.start,
+            wt.finish
+        FROM employees e
+            JOIN addresses a on e.id = a.employee_id
+            JOIN work_time wt ON e.id = wt.employee_id
+        WHERE (first_name ILIKE CONCAT('%', #{name}, '%')
+            OR last_name ILIKE CONCAT('%', #{name}, '%')
+            OR second_name ILIKE CONCAT('%', #{name}, '%'))
+            AND a.region LIKE CONCAT('%', #{region}, '%')
+            AND a.district LIKE CONCAT('%', #{district}, '%')
+        ORDER BY e.id;
+    </select>
+
+    <update id="updateEmployee">
+        UPDATE employees SET
+            first_name = #{firstName},
+            last_name = #{lastName},
+            second_name = #{secondName},
+            age = #{age}
+        WHERE id = #{id};
+    </update>
+
+    <insert id="saveNewEmployee" parameterType="ru.ovechnikov.emplist.api.request.UpdateRequest"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO employees (first_name, last_name, second_name, age)
+        VALUES (#{firstName}, #{lastName}, #{secondName}, #{age});
+    </insert>
+
+    <delete id="deleteEmployeeById">
+        DELETE FROM employees e
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

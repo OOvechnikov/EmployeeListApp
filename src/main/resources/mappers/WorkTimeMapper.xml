@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ru.ovechnikov.emplist.mapper.WorkTimeMapper">
+
+    <update id="updateWorkTime">
+        UPDATE work_time SET
+            start = #{start},
+            finish = #{finish}
+        WHERE employee_id = #{id};
+    </update>
+
+    <insert id="saveNewWorkTime">
+        INSERT INTO work_time (employee_id, start, finish)
+        VALUES (#{id}, #{start}, #{finish});
+    </insert>
+
+</mapper>

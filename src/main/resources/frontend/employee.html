@@ -46,9 +46,9 @@
 
                 <div class="row">
                     <div class="col mb-4">
-                        <label for="secName">Second name</label>
-                        <input id="secName" class="form-control"
-                               th:value="${emp.secName}" placeholder="Second name"
+                        <label for="secondName">Second name</label>
+                        <input id="secondName" class="form-control"
+                               th:value="${emp.secondName}" placeholder="Second name"
                                type="text" minlength="2" maxlength="20" pattern="(^[A-Z][a-zA-Z_.-]*$)|(^[А-Я][а-яА-я_.-]*$)">
                         <div class="invalid-feedback"> Valid second name is required.</div>
                     </div>
@@ -65,14 +65,14 @@
                     <div class="col-md-4 mb-4">
                         <label for="start">Work start</label>
                         <input id="start" class="form-control"
-                               th:value="${emp.start}" placeholder="Start"
+                               th:value="${emp.workTime.start}" placeholder="Start"
                                type="time" required="">
                         <div class="invalid-feedback"> Valid work time is required.</div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="finish">Work finish</label>
                         <input id="finish" class="form-control"
-                               th:value="${emp.finish}" placeholder="Finish"
+                               th:value="${emp.workTime.finish}" placeholder="Finish"
                                type="time" required="">
                         <div class="invalid-feedback"> Valid work time is required.</div>
                     </div>
@@ -82,7 +82,7 @@
                     <div class="col mb-4">
                         <label for="address">Address</label>
                         <input id="address" class="form-control"
-                               th:value="${emp.address}" placeholder="Address"
+                               th:value="${emp.address.address}" placeholder="Address"
                                type="text" required="" minlength="2" maxlength="256" pattern="(^[?!,.a-zA-Z0-9\s]+$)|(^[?!,.а-яА-ЯёЁ0-9\s]+$)">
                         <div class="invalid-feedback"> Valid address is required.</div>
                     </div>
@@ -92,7 +92,7 @@
                     <div class="col-md-6 mb-4">
                         <label for="region">Region</label>
                         <select class="custom-select d-block w-100" id="region" required="">
-                            <option th:text="${emp.region}">Choose...</option>
+                            <option th:text="${emp.address.region}">Choose...</option>
                             <option th:each="reg : ${regionList}" th:text="${reg}">Region</option>
                         </select>
                         <div class="invalid-feedback"> Valid region is required.</div>
@@ -100,7 +100,7 @@
                     <div class="col-md-6 mb-4">
                         <label for="district">District</label>
                         <select class="custom-select d-block w-100" id="district" required="">
-                            <option th:text="${emp.district}">Choose...</option>
+                            <option th:text="${emp.address.district}">Choose...</option>
                             <option th:each="distr : ${districtList}" th:text="${distr}">District</option>
                         </select>
                         <div class="invalid-feedback"> Valid district is required.</div>
@@ -110,7 +110,7 @@
                 <hr class="mb-4">
 
                 <div class="row" th:if="${emp.id != 0}">
-                    <div class="col-md-6 mb-4" th:object="${emp}">
+                    <div class="col-md-6 mb-4">
                         <button class="btn btn-primary btn-lg btn-block" type="submit" id="saveEmp">Save employee data</button>
                     </div>
                     <div class="col-md-6 mb-4">
