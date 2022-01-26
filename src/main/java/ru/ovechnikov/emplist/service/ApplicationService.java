@@ -3,6 +3,7 @@ package ru.ovechnikov.emplist.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
+import ru.ovechnikov.emplist.api.response.CreateResponse;
 import ru.ovechnikov.emplist.api.response.ResultResponse;
 import ru.ovechnikov.emplist.mapper.AddressMapper;
 import ru.ovechnikov.emplist.mapper.EmployeeMapper;
@@ -39,7 +40,7 @@ public class ApplicationService {
         employeeMapper.saveNewEmployee(request);
         addressMapper.saveNewAddress(request);
         workTimeMapper.saveNewWorkTime(request);
-        return new ResultResponse(true);
+        return new CreateResponse(true, request.getId());
     }
 
     public ResultResponse updateEmployee(UpdateRequest request) {

@@ -12,19 +12,12 @@ const region = document.getElementById("region")
 const district = document.getElementById("district")
 
 window.addEventListener('load', function() {
-    console.log('enter');
     const forms = document.getElementsByClassName('needs-validation');
-    console.log('needs-validation');
     Array.prototype.filter.call(forms, function(form) {
-        console.log('validation');
         button.addEventListener("click", (event)=> {
-            console.log('listner');
             event.preventDefault();
             event.stopPropagation();
-            if (form.checkValidity() === false) {
-                console.log('if');
-            } else {
-                console.log('else');
+            if (form.checkValidity() === true) {
                 const data = {
                     id: id.getAttribute("value"),
                     firstName: firstName.value,
@@ -37,17 +30,13 @@ window.addEventListener('load', function() {
                     region: region.value,
                     district: district.value
                 }
-                console.log(data)
                 if (data.id === '') {
-                    console.log('create');
                     createEmployee(data);
                 } else {
-                    console.log('update');
                     updateEmployee(data);
                 }
             }
             form.classList.add('was-validated');
         })
-        console.log('listner');
     });
 }, false);
