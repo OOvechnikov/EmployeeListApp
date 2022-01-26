@@ -1,11 +1,25 @@
 window.addEventListener('load', function() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(window.location.search);
+    if (queryString !== '') {
+        document.getElementById('nameSearch').value = urlParams.get('name');
+        document.getElementById('regionSearch').value = urlParams.get('region');
+        document.getElementById('districtSearch').value = urlParams.get('district');
+    }
+
     const searchButton = document.getElementById('searchButton');
     searchButton.addEventListener("click", (event)=> {
         event.preventDefault();
         event.stopPropagation();
         const nameValue = document.getElementById('nameSearch').value;
-        const regionValue = document.getElementById('regionSearch').value;
-        const districtValue = document.getElementById('districtSearch').value;
+        let regionValue = document.getElementById('regionSearch').value;
+        let districtValue = document.getElementById('districtSearch').value;
+        if (regionValue === 'Region') {
+            regionValue = '';
+        }
+        if (districtValue === 'District') {
+            districtValue = '';
+        }
         window.location = ('/home?name=' + nameValue + '&region=' + regionValue + '&district=' +districtValue);
     })
 }, false);
