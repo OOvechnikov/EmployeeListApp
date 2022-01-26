@@ -19,6 +19,7 @@ public class Employee {
         WorkTime workTime = new WorkTime();
         workTime.setStart(new Time(0));
         workTime.setFinish(new Time(0));
+        employee.setId(-1);
         employee.setAddress(address);
         employee.setWorkTime(workTime);
         return employee;

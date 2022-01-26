@@ -30,7 +30,7 @@ window.addEventListener('load', function() {
                     region: region.value,
                     district: district.value
                 }
-                if (data.id === '') {
+                if (data.id === '-1') {
                     createEmployee(data);
                 } else {
                     updateEmployee(data);

@@ -30,16 +30,20 @@
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label for="lastName">Last name</label>
-                        <input id="lastName" class="form-control"
+                        <input th:if="${isAdmin}" id="lastName" class="form-control"
                                th:value="${emp.lastName}" placeholder="Doe"
                                type="text" required="" minlength="2" maxlength="50" pattern="(^[A-Z][a-zA-Z_.-]*$)|(^[А-Я][а-яА-я_.-]*$)">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.lastName}" placeholder="Doe">
                         <div class="invalid-feedback"> Valid last name is required.</div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label for="firstName">First name</label>
-                            <input id="firstName" class="form-control"
+                            <input th:if="${isAdmin}" id="firstName" class="form-control"
                                    th:value="${emp.firstName}" placeholder="John"
                                    type="text" required="" minlength="2" maxlength="20" pattern="(^[A-Z][a-zA-Z_.-]*$)|(^[А-Я][а-яА-я_.-]*$)">
+                            <input th:if="${!isAdmin}" disabled="" class="form-control"
+                                   th:value="${emp.firstName}" placeholder="John">
                         <div class="invalid-feedback"> Valid first name is required.</div>
                     </div>
                 </div>
@@ -47,9 +51,11 @@
                 <div class="row">
                     <div class="col mb-4">
                         <label for="secondName">Second name</label>
-                        <input id="secondName" class="form-control"
+                        <input th:if="${isAdmin}" id="secondName" class="form-control"
                                th:value="${emp.secondName}" placeholder="Second name"
                                type="text" minlength="2" maxlength="20" pattern="(^[A-Z][a-zA-Z_.-]*$)|(^[А-Я][а-яА-я_.-]*$)">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.secondName}" placeholder="Second name">
                         <div class="invalid-feedback"> Valid second name is required.</div>
                     </div>
                 </div>
@@ -57,23 +63,29 @@
                 <div class="row">
                     <div class="col-md-4 mb-4">
                         <label for="age">Age</label>
-                        <input id="age" class="form-control"
+                        <input th:if="${isAdmin}" id="age" class="form-control"
                                th:value="${emp.age}" placeholder="Age"
                                type="number" required="" min="18" max="65">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.age}" placeholder="Age">
                         <div class="invalid-feedback"> Valid age is required.</div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="start">Work start</label>
-                        <input id="start" class="form-control"
+                        <input th:if="${isAdmin}" id="start" class="form-control"
                                th:value="${emp.workTime.start}" placeholder="Start"
                                type="time" required="">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control" type="time"
+                               th:value="${emp.workTime.start}" placeholder="Start">
                         <div class="invalid-feedback"> Valid work time is required.</div>
                     </div>
                     <div class="col-md-4 mb-4">
                         <label for="finish">Work finish</label>
-                        <input id="finish" class="form-control"
+                        <input th:if="${isAdmin}" id="finish" class="form-control"
                                th:value="${emp.workTime.finish}" placeholder="Finish"
                                type="time" required="">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control" type="time"
+                               th:value="${emp.workTime.finish}" placeholder="Finish">
                         <div class="invalid-feedback"> Valid work time is required.</div>
                     </div>
                 </div>
@@ -81,9 +93,11 @@
                 <div class="row">
                     <div class="col mb-4">
                         <label for="address">Address</label>
-                        <input id="address" class="form-control"
+                        <input th:if="${isAdmin}" id="address" class="form-control"
                                th:value="${emp.address.address}" placeholder="Address"
                                type="text" required="" minlength="2" maxlength="256" pattern="(^[?!,.a-zA-Z0-9\s]+$)|(^[?!,.а-яА-ЯёЁ0-9\s]+$)">
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.address.address}" placeholder="Address">
                         <div class="invalid-feedback"> Valid address is required.</div>
                     </div>
                 </div>
@@ -91,34 +105,45 @@
                 <div class="row">
                     <div class="col-md-6 mb-4">
                         <label for="region">Region</label>
-                        <select class="custom-select d-block w-100" id="region" required="">
+                        <select th:if="${isAdmin}" class="custom-select" id="region" required="">
                             <option th:text="${emp.address.region}">Choose...</option>
                             <option th:each="reg : ${regionList}" th:text="${reg}">Region</option>
                         </select>
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.address.region}" placeholder="Address">
                         <div class="invalid-feedback"> Valid region is required.</div>
                     </div>
                     <div class="col-md-6 mb-4">
                         <label for="district">District</label>
-                        <select class="custom-select d-block w-100" id="district" required="">
+                        <select th:if="${isAdmin}" class="custom-select" id="district" required="">
                             <option th:text="${emp.address.district}">Choose...</option>
                             <option th:each="distr : ${districtList}" th:text="${distr}">District</option>
                         </select>
+                        <input th:if="${!isAdmin}" disabled="" class="form-control"
+                               th:value="${emp.address.district}" placeholder="Address">
+                        <div class="invalid-feedback"> Valid region is required.</div>
                         <div class="invalid-feedback"> Valid district is required.</div>
                     </div>
                 </div>
 
                 <hr class="mb-4">
 
-                <div class="row" th:if="${emp.id != 0}">
-                    <div class="col-md-6 mb-4">
+                <div class="row" th:if="${emp.id > 0}">
+                    <div class="col-md-6 mb-4" th:if="${isAdmin}">
                         <button class="btn btn-primary btn-lg btn-block" type="submit" id="saveEmp">Save employee data</button>
                     </div>
-                    <div class="col-md-6 mb-4">
+                    <div class="col-md-6 mb-4" th:if="${isAdmin}">
                         <button class="btn btn-danger btn-lg btn-block" type="submit" id="deleteEmp"
                                 th:onclick="'deleteEmployee(\'' + ${emp.id} + '\')'">Delete employee</button>
                     </div>
+                    <div class="col-md-6 mb-4" th:if="${!isAdmin}">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit" disabled="">Save employee data</button>
+                    </div>
+                    <div class="col-md-6 mb-4" th:if="${!isAdmin}">
+                        <button class="btn btn-danger btn-lg btn-block" type="submit" disabled="">Delete employee</button>
+                    </div>
                 </div>
-                <div class="row" th:if="${emp.id == 0}">
+                <div class="row" th:if="${emp.id == -1}">
                     <div class="col mb-4">
                         <button class="btn btn-primary btn-lg btn-block" type="submit" id="saveEmp">Create new employee</button>
                     </div>

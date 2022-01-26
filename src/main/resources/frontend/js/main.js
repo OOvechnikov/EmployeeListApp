@@ -13,9 +13,7 @@ function updateEmployee(data) {
     xhr.open("PATCH", ('/employee/' + data.id), true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(body);
-    xhr.onreadystatechange = function () {
-        returnToHome(xhr);
-    }
+    window.location.reload();
 }
 
 function createEmployee(data) {
