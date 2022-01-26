@@ -1,6 +1,8 @@
 package ru.ovechnikov.emplist.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +33,8 @@ public class HomeController {
         model.addAttribute("employeeList", applicationService.getEmployeeList(name, region, district));
         model.addAttribute("regionList", applicationService.getRegionList());
         model.addAttribute("districtList", applicationService.getDistrictList());
+        model.addAttribute("isAdmin", SecurityContextHolder.getContext()
+                .getAuthentication().getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
         return "/home";
     }
 }

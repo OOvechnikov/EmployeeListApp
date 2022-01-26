@@ -1,9 +1,10 @@
-const button = document.getElementById("saveEmp")
+const editButton = document.getElementById("saveEmp")
+const deleteButton = document.getElementById("deleteEmp")
 
 const id = document.getElementById("id")
 const firstName = document.getElementById("firstName")
 const lastName = document.getElementById("lastName")
-const secName = document.getElementById("secName")
+const secondName = document.getElementById("secondName")
 const address = document.getElementById("address")
 const age = document.getElementById("age")
 const start = document.getElementById("start")
@@ -12,24 +13,17 @@ const region = document.getElementById("region")
 const district = document.getElementById("district")
 
 window.addEventListener('load', function() {
-    console.log('enter');
     const forms = document.getElementsByClassName('needs-validation');
-    console.log('needs-validation');
     Array.prototype.filter.call(forms, function(form) {
-        console.log('validation');
-        button.addEventListener("click", (event)=> {
-            console.log('listner');
+        editButton.addEventListener("click", (event)=> {
             event.preventDefault();
             event.stopPropagation();
-            if (form.checkValidity() === false) {
-                console.log('if');
-            } else {
-                console.log('else');
+            if (form.checkValidity() === true) {
                 const data = {
                     id: id.getAttribute("value"),
                     firstName: firstName.value,
                     lastName: lastName.value,
-                    secName: secName.value,
+                    secondName: secondName.value,
                     address: address.value,
                     age: age.value,
                     start: start.value,
@@ -37,8 +31,8 @@ window.addEventListener('load', function() {
                     region: region.value,
                     district: district.value
                 }
-                console.log(data)
-                if (data.id === '0') {
+                console.log(data);
+                if (data.id === '-1') {
                     console.log('create');
                     createEmployee(data);
                 } else {
@@ -48,6 +42,12 @@ window.addEventListener('load', function() {
             }
             form.classList.add('was-validated');
         })
-        console.log('listner');
+        deleteButton.addEventListener('click', (event) => {
+            console.log('deleteButton');
+            event.preventDefault();
+            event.stopPropagation();
+            deleteEmployee(id.getAttribute('value'));
+            console.log('deleteButtonEnd');
+        })
     });
 }, false);

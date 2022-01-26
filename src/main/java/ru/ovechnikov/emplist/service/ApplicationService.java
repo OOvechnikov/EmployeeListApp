@@ -1,10 +1,13 @@
 package ru.ovechnikov.emplist.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
+import ru.ovechnikov.emplist.api.response.CreateResponse;
 import ru.ovechnikov.emplist.api.response.ResultResponse;
 import ru.ovechnikov.emplist.domain.Employee;
+import ru.ovechnikov.emplist.exception.EmployeeNotFoundException;
 import ru.ovechnikov.emplist.repository.ApplicationRepository;
 
 import java.util.List;
@@ -26,21 +29,32 @@ public class ApplicationService {
         return applicationRepository.getEmployeeList(name, region, district);
     }
 
-    public Employee getEmployeeById(String id) {
-        return applicationRepository.getEmployeeById(id);
+    public Employee getEmployeeById(Integer id) throws EmployeeNotFoundException {
+        return applicationRepository.getEmployeeById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(String.format("Employee with id = %s not found", id)));
     }
 
     public ResultResponse createNewEmployee(UpdateRequest request) {
-        applicationRepository.saveNewEmployee(request);
-        return new ResultResponse(true);
+        int id = applicationRepository.saveNewEmployee(request);
+        return new CreateResponse(true, id);
     }
 
-    public ResultResponse updateEmployee(UpdateRequest request) {
+    public ResultResponse updateEmployee(UpdateRequest request)  {
+        try {
+            getEmployeeById(request.getId());
+        } catch (EmployeeNotFoundException e) {
+            return new ResultResponse(false);
+        }
         applicationRepository.updateEmployee(request);
         return new ResultResponse(true);
     }
 
-    public ResultResponse deleteEmployee(String id) {
+    public ResultResponse deleteEmployee(Integer id) {
+        try {
+            getEmployeeById(id);
+        } catch (EmployeeNotFoundException e) {
+            return new ResultResponse(false);
+        }
         applicationRepository.deleteEmployeeById(id);
         return new ResultResponse(true);
     }

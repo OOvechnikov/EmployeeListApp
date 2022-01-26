@@ -1,17 +1,25 @@
 package ru.ovechnikov.emplist.api.request;
 
+import ru.ovechnikov.emplist.exception.WrongArgumentException;
+
+import java.sql.Time;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 public class UpdateRequest {
+
+    private static final SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 
     private int id;
     private String firstName;
     private String lastName;
-    private String secName;
+    private String secondName;
     private int age;
     private String address;
     private String region;
     private String district;
-    private String start;
-    private String finish;
+    private Time start;
+    private Time finish;
 
 
     public int getId() {
@@ -38,12 +46,12 @@ public class UpdateRequest {
         this.lastName = lastName;
     }
 
-    public String getSecName() {
-        return secName;
+    public String getSecondName() {
+        return secondName;
     }
 
-    public void setSecName(String secName) {
-        this.secName = secName;
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public int getAge() {
@@ -78,19 +86,30 @@ public class UpdateRequest {
         this.district = district;
     }
 
-    public String getStart() {
-        return start.toString();
+    public Time getStart() {
+        return start;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setStart(String start) throws WrongArgumentException {
+        this.start = stringToTime(start);
     }
 
-    public String getFinish() {
-        return finish.toString();
+    public Time getFinish() {
+        return finish;
     }
 
-    public void setFinish(String finish) {
-        this.finish = finish;
+    public void setFinish(String finish) throws WrongArgumentException {
+        this.finish = stringToTime(finish);
+    }
+
+
+    private Time stringToTime(String str) throws WrongArgumentException {
+        long ms;
+        try {
+            ms = SDF.parse(str).getTime();
+        } catch (ParseException e) {
+            throw new WrongArgumentException("Неверный формат времени. Верный: HH:mm");
+        }
+        return new Time(ms);
     }
 }

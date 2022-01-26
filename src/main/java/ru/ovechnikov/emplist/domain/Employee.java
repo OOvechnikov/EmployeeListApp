@@ -7,7 +7,7 @@ public class Employee {
     private int id;
     private String firstName;
     private String lastName;
-    private String secName;
+    private String secondName;
     private String name;
     private int age;
     private String address;
@@ -41,12 +41,12 @@ public class Employee {
         this.lastName = lastName;
     }
 
-    public String getSecName() {
-        return secName;
+    public String getSecondName() {
+        return secondName;
     }
 
-    public void setSecName(String secName) {
-        this.secName = secName;
+    public void setSecondName(String secondName) {
+        this.secondName = secondName;
     }
 
     public String getName() {
@@ -105,8 +105,13 @@ public class Employee {
         this.finish = finish;
     }
 
+    public String getFullName() {
+        return lastName + " " + firstName + " " + secondName;
+    }
+
     public static Employee buildNewEmployee() {
         Employee employee = new Employee();
+        employee.setId(-1);
         employee.setStart(Time.valueOf("09:00:00"));
         employee.setFinish(Time.valueOf("18:00:00"));
         return employee;

@@ -5,10 +5,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.ovechnikov.emplist.api.request.UpdateRequest;
 import ru.ovechnikov.emplist.domain.Employee;
+import ru.ovechnikov.emplist.domain.EmployeeRowMapper;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class ApplicationRepository {
@@ -21,19 +22,14 @@ public class ApplicationRepository {
     }
 
 
-    public Employee getEmployeeById(String id) {
+    public Optional<Employee> getEmployeeById(Integer id) {
         String query =
                 "SELECT e.id, e.first_name, e.last_name, e.second_name, e.age, a.address, a.region, a.district, wt.start, wt.finish from employees e " +
                 "JOIN addresses a on e.id = a.employee_id " +
                 "JOIN work_time wt ON e.id = wt.employee_id " +
-                "WHERE e.id = '" + id + "'";
-        Employee employee = jdbcTemplate.query(query, rse -> {
-            if (!rse.next()) {
-                return null;
-            }
-            return getEmployee(rse);
-        });
-        return employee;
+                "WHERE e.id = ?";
+        return jdbcTemplate.query(query, new EmployeeRowMapper(), id)
+                            .stream().findFirst();
     }
 
     public List<Employee> getEmployeeList(String name, String region, String district) {
@@ -41,21 +37,23 @@ public class ApplicationRepository {
                 "SELECT e.id, e.first_name, e.last_name, e.second_name, e.age, a.address, a.region, a.district, wt.start, wt.finish from employees e " +
                 "JOIN addresses a on e.id = a.employee_id " +
                 "JOIN work_time wt ON e.id = wt.employee_id " +
-                "WHERE (first_name ILIKE CONCAT('%', '" + name + "', '%') " +
-                    "OR last_name ILIKE CONCAT('%', '" + name + "', '%') " +
-                    "OR second_name ILIKE CONCAT('%', '" + name + "', '%')) " +
-                    "AND a.region LIKE CONCAT('%', '" + region + "', '%') " +
-                    "AND a.district LIKE CONCAT('%', '" + district + "', '%') " +
+                "WHERE (first_name ILIKE CONCAT('%', ?, '%') " +
+                    "OR last_name ILIKE CONCAT('%', ?, '%') " +
+                    "OR second_name ILIKE CONCAT('%', ?, '%')) " +
+                    "AND a.region LIKE CONCAT('%', ?, '%') " +
+                    "AND a.district LIKE CONCAT('%', ?, '%') " +
                 "ORDER BY id";
-        List<Employee> list = jdbcTemplate.query(query, (ResultSet rse, int rowNum) -> getEmployee(rse));
-        return list;
+        return jdbcTemplate.query(
+                query,
+                new EmployeeRowMapper(),
+                name, name, name, region, district);
     }
 
-    public void saveNewEmployee(UpdateRequest request) {
+    public Integer saveNewEmployee(UpdateRequest request) {
         String sql =
                 "INSERT INTO employees (first_name, last_name, second_name, age) " +
                 "VALUES ('" + request.getFirstName() + "', '" + request.getLastName() + "', '"
-                        + request.getSecName() + "', " + request.getAge() + ") RETURNING id";
+                        + request.getSecondName() + "', " + request.getAge() + ") RETURNING id";
         Integer id = jdbcTemplate.query(sql, rse -> {
             rse.next();
             return rse.getInt("id");
@@ -63,71 +61,55 @@ public class ApplicationRepository {
 
         sql =
                 "INSERT INTO addresses (employee_id, address, region, district) " +
-                "VALUES (" + id + ", '" + request.getAddress() + "', '"
-                        + request.getRegion() + "', '" + request.getDistrict() + "');" +
+                "VALUES (?, ?, ?, ?); " +
                 "INSERT INTO work_time (employee_id, start, finish) " +
-                "VALUES (" + id + ", '" + request.getStart() + "', '" + request.getFinish() + "')";
-        jdbcTemplate.execute(sql);
+                "VALUES (?, ?, ?)";
+        jdbcTemplate.update(sql,
+                id, request.getAddress(), request.getRegion(), request.getDistrict(),
+                id, request.getStart(), request.getFinish());
+
+        return id;
     }
 
-    public void updateEmployee(UpdateRequest request) {
+    public Integer updateEmployee(UpdateRequest request) {
         String sql =
                 "UPDATE employees SET " +
-                "first_name=\'" + request.getFirstName() + "\', " +
-                "last_name=\'" + request.getLastName() + "\', " +
-                "second_name=\'" + request.getSecName() + "\', " +
-                "age=" + request.getAge() +  " " +
-                "WHERE id=" + request.getId() + ";" +
+                "first_name = (?), " +
+                "last_name = (?), " +
+                "second_name = (?), " +
+                "age = (?) " +
+                "WHERE id = (?); " +
                 "UPDATE addresses SET " +
-                "address=\'" + request.getAddress() + "\', " +
-                "region=\'" + request.getRegion() + "\', " +
-                "district=\'" + request.getDistrict() + "\' " +
-                "WHERE employee_id=" + request.getId() + ";" +
+                "address = (?), " +
+                "region = (?), " +
+                "district = (?) " +
+                "WHERE employee_id = (?); " +
                 "UPDATE work_time SET " +
-                "start=\'" + request.getStart() + "\', " +
-                "finish=\'" + request.getFinish() + "\' " +
-                "WHERE employee_id=" + request.getId() + ";";
-        jdbcTemplate.execute(sql);
+                "start = (?), " +
+                "finish = (?) " +
+                "WHERE employee_id = (?)";
+        return jdbcTemplate.update(sql,
+                request.getFirstName(), request.getLastName(), request.getSecondName(), request.getAge(), request.getId(),
+                request.getAddress(), request.getRegion(), request.getDistrict(), request.getId(),
+                request.getStart(), request.getFinish(), request.getId());
     }
 
-    public void deleteEmployeeById(String id) {
+    public Integer deleteEmployeeById(Integer id) {
         String sql =
                 "DELETE FROM employees e " +
-                "WHERE e.id = '" + id + "'";
-        jdbcTemplate.execute(sql);
+                "WHERE e.id = ?";
+        return jdbcTemplate.update(sql, id);
     }
 
     public List<String> getRegionList() {
         String query = "SELECT DISTINCT(a.region) FROM addresses a";
-        List<String> regionList = jdbcTemplate.query(query, 
+        return jdbcTemplate.query(query,
                 (ResultSet rs, int rowNum) -> rs.getString("region"));
-        return regionList;
     }
 
     public List<String> getDistrictList() {
         String query = "SELECT DISTINCT(a.district) FROM addresses a";
-        List<String> districtList = jdbcTemplate.query(query,
+        return jdbcTemplate.query(query,
                 (ResultSet rs, int rowNum) -> rs.getString("district"));
-        return districtList;
-    }
-
-
-    private Employee getEmployee(ResultSet rs) throws SQLException {
-        Employee employee = new Employee();
-        employee.setId(rs.getInt("id"));
-        employee.setFirstName(rs.getString("first_name"));
-        employee.setLastName(rs.getString("last_name"));
-        employee.setSecName(rs.getString("second_name"));
-        String name = employee.getFirstName() + " "
-                + employee.getLastName() + " "
-                + employee.getSecName();
-        employee.setName(name);
-        employee.setAge(rs.getInt("age"));
-        employee.setAddress(rs.getString("address"));
-        employee.setRegion(rs.getString("region"));
-        employee.setDistrict(rs.getString("district"));
-        employee.setStart(rs.getTime("start"));
-        employee.setFinish(rs.getTime("finish"));
-        return employee;
     }
 }

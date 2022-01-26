@@ -2,7 +2,6 @@ function deleteEmployee(id) {
     const xhr = new XMLHttpRequest();
     xhr.open( "DELETE", ("/employee/" + id), true );
     xhr.send( null );
-    console.log('delete');
     xhr.onreadystatechange = function () {
         returnToHome(xhr);
     }
@@ -15,7 +14,7 @@ function updateEmployee(data) {
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(body);
     xhr.onreadystatechange = function () {
-        returnToHome(xhr);
+        window.location.reload();
     }
 }
 
@@ -24,16 +23,19 @@ function createEmployee(data) {
     const body = JSON.stringify(data);
     xhr.open("POST", '/employee', true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    console.log('body');
     xhr.send(body);
     xhr.onreadystatechange = function () {
-        returnToHome(xhr);
+        const response = JSON.parse(xhr.response);
+        if (xhr.status === 200 && response.result === true) {
+            window.location = response.createdId;
+        } else {
+            returnToHome(xhr);
+        }
     }
 }
 
 function returnToHome(xhr) {
     if (xhr.status === 200) {
-        console.log(200)
         window.location = "/home";
     }
 }
