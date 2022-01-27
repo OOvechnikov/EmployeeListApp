@@ -41,6 +41,11 @@
             </button>
         </form>
     </nav>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
+        </ol>
+    </nav>
 
     <div class="container-lg text-center">
         <div class="row">
@@ -69,7 +74,30 @@
                             <td th:text="${emp.region}" class="sortingValue">Region</td>
                             <td th:text="${emp.district}" class="sortingValue">District</td>
                             <td th:if="${isAdmin}">
-                                <button class="btn btn-danger" th:onclick="'deleteEmployee(\'' + ${emp.id} + '\')'">Remove</button>
+                                <button class="btn btn-danger" data-toggle="modal" data-target="#removeConfirm">Remove</button>
+                                <div id="removeConfirm" class="modal fade">
+                                    <div class="modal-dialog modal-sm modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <div class="modal-title w-100 text-center">
+                                                    <h4>Are you sure?</h4>
+                                                </div>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="row">
+                                                    <div class="col-1"></div>
+                                                    <div class="col-5">
+                                                        <button class="btn btn-danger btn-block" th:onclick="'deleteEmployee(\'' + ${emp.id} + '\')'">Yes</button>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <button class="btn btn-secondary btn-block" data-dismiss="modal">No</button>
+                                                    </div>
+                                                    <div class="col-1"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </td>
                             <td th:if="${!isAdmin}">
                                 <button class="btn btn-danger" disabled="">Remove</button>
