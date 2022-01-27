@@ -16,7 +16,10 @@
         <div class="my-2">
             <a class="navbar-brand col-md-2 mr-0 px-3" th:href="@{/home}">Company name</a>
         </div>
-        <form class="form-inline my-2 ml-auto">
+        <button class="btn btn-primary btn-outline-white btn-md my-2 ml-auto" id="exportButton">
+            Export to Excel
+        </button>
+        <form class="form-inline my-2 ml-3">
             <div class="input-group">
                 <input type="text" class="form-control" placeholder="Name" id="nameSearch">
                 <select class="custom-select" id="regionSearch">
@@ -45,7 +48,7 @@
             <div class="col-md-10">
                 <table class="table table-striped table-bordered my-4" id="sortable" style="background-color: white">
                     <thead class="thead-dark">
-                        <tr>
+                        <tr class="head-row">
                             <th class="col-1 sort" scope="col" data-type="number" style="cursor: pointer">#</th>
                             <th class="col-3 sort" scope="col" style="cursor: pointer">Full name</th>
                             <th class="col-1 sort" scope="col" data-type="number" style="cursor: pointer">Age</th>
@@ -56,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="emp,empStat : ${employeeList}">
+                        <tr th:each="emp,empStat : ${employeeList}" class="body-row">
                             <td th:text="${empStat.index + 1}" class="sortingValue">Index</td>
                             <td>
                                 <a th:href="@{'/employee/' + ${emp.id}}" th:text="${emp.getFullName()}" class="sortingValue">Name</a>

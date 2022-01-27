@@ -79,3 +79,28 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+const exportButton = document.getElementById('exportButton');
+exportButton.addEventListener('click', function() {
+    const headRow = document.getElementsByClassName('head-row');
+    const bodyRows = document.getElementsByClassName('body-row');
+    let head = [];
+    const ths = headRow[0].getElementsByTagName('th');
+    for (let i = 0; i < ths.length - 1; i++) {
+        head[i] = ths[i].innerText;
+    }
+    let body = [];
+    for (let i = 0; i < bodyRows.length; i++) {
+        let thd = bodyRows[i].getElementsByTagName('td');
+        let row = [];
+        for (let j = 0; j < thd.length - 1; j++) {
+            row[j] = thd[j].innerText;
+        }
+        body[i] = row;
+    }
+    let data = {
+        head: head,
+        body: body
+    }
+    exportToExcel(data);
+}, false);

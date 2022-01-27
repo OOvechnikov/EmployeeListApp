@@ -34,6 +34,29 @@ function createEmployee(data) {
     }
 }
 
+function exportToExcel(data) {
+    const xhr = new XMLHttpRequest();
+    const body = JSON.stringify(data);
+    xhr.open("POST", '/home/export', true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.responseType = 'blob';
+    xhr.send(body);
+    xhr.onreadystatechange = function () {
+        if (this.status === 200) {
+            let blob = this.response;
+            if (blob != null) {
+                let downloadLink = window.document.createElement('a');
+                let contentTypeHeader = xhr.getResponseHeader("Content-Type");
+                downloadLink.href = window.URL.createObjectURL(new Blob([blob], { type: contentTypeHeader }));
+                downloadLink.download = xhr.getResponseHeader('Content-Disposition');
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
+            }
+        }
+    }
+}
+
 function returnToHome(xhr) {
     if (xhr.status === 200) {
         window.location = "/home";
